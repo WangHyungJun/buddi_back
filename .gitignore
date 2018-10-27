@@ -1,0 +1,4 @@
+#Python Compile Files
+*.pyc
+businessproject/check.log
+*.xml
