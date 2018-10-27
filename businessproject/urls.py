@@ -24,7 +24,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^cebula/',include('cebula.urls',namespace='cebula')),
-    path('api/',include('cebula_react.urls', namespace='cebula_react')),
+    path('api/', include('api.urls', namespace='api')),
     url(r'^accounts/login', cebula_views.LogIn.as_view(), name='login'),
     path('accounts/logout', cebula_views.LogOut, name='logout'),
     url(r'^accounts/signup/$',cebula_views.CreateUserView.as_view(),name='signup'),

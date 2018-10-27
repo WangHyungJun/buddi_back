@@ -284,11 +284,13 @@ class QuestionView(ListView):
     context_object_name = 'context'
 
     def get_queryset(self):
+        url_list = []
         metoo_num=[]
         question_object_list=models.Question.objects.order_by('-pub_date')
         for question_object in question_object_list:
+            url_list.append(question_object.question_text.replace(" ", "-"))
             metoo_num.append(counting_metoo(question_object.pk))
-        context=zip(metoo_num, question_object_list)
+        context=zip(metoo_num, question_object_list, url_list)
         return context
 
     def post(self, *args, **kwargs):

@@ -15,9 +15,7 @@ import logging
 import pdb
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
+BASE_DIR = "C:\\Users\\kshee\\Cebula"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -54,7 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'webpack_loader',
     'rest_framework',
-    'cebula_react'
+    'api',
 ]
 
 SITE_ID=1
@@ -74,7 +72,7 @@ ROOT_URLCONF = 'businessproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR,'frontend/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -163,7 +161,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR,'frontend/static'),
 ]
 
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
@@ -173,7 +171,7 @@ LOGIN_REDIRECT_URL='/cebula/'
 
 #Media_URL
 MEDIA_URL='/files/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'uploads')
+MEDIA_ROOT=os.path.join(BASE_DIR,'backend/uploads')
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000
 
@@ -258,7 +256,7 @@ LOGGING = {
 WEBPACK_LOADER = {
     'DEFAULT' : {
             'BUNDLE_DIR_NAME': 'cebula/bundles/',
-            'STATS_FILE': os.path.join(BASE_DIR, 'cebula_react/webpack-stats.json'),
+            'STATS_FILE': os.path.join(BASE_DIR, 'frontend/cebula_react/webpack-stats.json'),
 
     }
 }
