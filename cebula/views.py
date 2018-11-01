@@ -1,6 +1,8 @@
 import json
 import logging
 import pdb
+import channels.layers
+from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import hashers, login, logout
@@ -12,6 +14,7 @@ from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils.decorators import method_decorator
+from django.utils.safestring import mark_safe
 from django.template import RequestContext
 from . import models
 from .forms import CreateUserForm, UploadForm, QuestionForm, CategoryForm, ContentForm, FriendSearchForm
@@ -757,6 +760,7 @@ class follower(ListView):
         context['User']=self.kwargs['username']
         return context
 
+
 class Sub_Category(ListView):
     template_name='cebula/alpha_sub_category.html'
     context_object_name = "subcategory_contents"
@@ -850,11 +854,11 @@ class Test(TemplateView):
 
     def get_context_data(self):
         context=super(TemplateView, self).get_context_data()
-        context['username']="HyungJun"
+        context['username']=self.request.user.username
 
         return context
 
-    
+
 class Setting(UpdateView):
     template_name = "cebula/alpha_setting.html"
     fields=['username', 'email', 'password']
@@ -1014,6 +1018,8 @@ class ShareAnswersAPIView(ListAPIView):
         return queryset
 
 
+class websoket(TemplateView):
+    template_name = "cebula/alphat_websoket.html"
 
 
 

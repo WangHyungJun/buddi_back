@@ -24,4 +24,5 @@ urlpatterns = [
     path('friendsearch', views.FriendSearch.as_view(), name="friendsearch"),
     path('test', views.Test.as_view(), name="test"),
     path('<slug:username>/setting', views.Setting.as_view(), name='setting'),
+    path('websoket' ,views.websoket.as_view(), name="websoket"),
 ]

@@ -106,3 +106,9 @@ class Share_Answers(models.Model):
 class MeToo(models.Model):
     owner=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Uncompli_question=models.ForeignKey(Question, on_delete=models.CASCADE) #공감은 미완성된 질문에 한해서만 허용하겠다.
+
+
+class Alarm(models.Model):
+    owner=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    contents=models.CharField(max_length=100)
+

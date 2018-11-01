@@ -33,6 +33,7 @@ AUTH_USER_MODEL='cebula.MyUser'
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'cebula',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,7 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'businessproject.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -276,6 +276,16 @@ REST_FRAMEWORK = {
     )
 }
 
+ASGI_APPLICATION = 'businessproject.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 if DEBUG:
     # make all loggers use the console.
