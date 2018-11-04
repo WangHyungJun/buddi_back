@@ -1,5 +1,5 @@
 # chat/consumers.py
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 import json, pdb
 from asgiref.sync import async_to_sync
 
