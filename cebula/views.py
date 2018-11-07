@@ -1022,4 +1022,13 @@ class websoket(TemplateView):
     template_name = "cebula/alphat_websoket.html"
 
 
+class UserTestView(TemplateView):
+    template_name = "cebula/usertest.html"
+
+    def get_context_data(self, **kwargs):
+        context=super(TemplateView, self).get_context_data()
+        context['username']=self.kwargs['username']
+
+        return context
+
 

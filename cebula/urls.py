@@ -25,4 +25,5 @@ urlpatterns = [
     path('test', views.Test.as_view(), name="test"),
     path('<slug:username>/setting', views.Setting.as_view(), name='setting'),
     path('websoket' ,views.websoket.as_view(), name="websoket"),
+    re_path(r'test/(?P<username>.*)', views.UserTestView.as_view(), name='usertest'),
 ]
