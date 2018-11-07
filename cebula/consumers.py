@@ -1,8 +1,23 @@
 # chat/consumers.py
 from channels.generic.websocket import WebsocketConsumer
-import json, pdb, logging
+import json, pdb
 from asgiref.sync import async_to_sync
-from channels.auth import logout
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import MyUser, Alarm
+from channels.layers import get_channel_layer
+
+
+@receiver(post_save, sender=Alarm)
+def announce_likes(sender, instance, created, **kwargs):
+    if created:
+        channel_layer=get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "likes", {
+                "type": "like_message",
+                "message": instance.contents,
+            }
+    )
 
 class TestConsumer(WebsocketConsumer):
 
@@ -38,7 +53,7 @@ class TestConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def like_message(self, event):
-        message = "%s님이 게시물을 좋아합니다."%event['message']
+        message = event["message"]
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({

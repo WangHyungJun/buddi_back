@@ -1031,4 +1031,14 @@ class UserTestView(TemplateView):
 
         return context
 
+    def post(self, request, **kwargs):
+        ins=models.Alarm()
+        ins.owner=request.user
+        data_unicode=request.body.decode('utf-8')
+        data=json.loads(data_unicode)
+        ins.contents=data['message']
+        ins.save()
+
+        return HttpResponse('')
+
 
