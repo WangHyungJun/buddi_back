@@ -16,4 +16,5 @@ urlpatterns = [
     path('main', views.MainPageAPIView.as_view(), name="main_api"),
     re_path('ShareQnA/(?P<pk>\d+)/', views.ShareQnAAPIView.as_view(), name="Share_QnA_api"),
     re_path('ShareAnswers/(?P<pk>\d+)/', views.ShareAnswersAPIView.as_view(), name="Share_Answers_api"),
+    re_path('Buddi', views.BuddiAPIView.as_view(), name="Buddi_api"),
 ]

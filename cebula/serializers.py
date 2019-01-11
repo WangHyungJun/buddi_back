@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MyUser, Question, Answers, Share_QandA, Share_Answers
+from .models import MyUser, Question, Answers, Share_QandA, Share_Answers, Buddi
 import pdb
 from django.shortcuts import HttpResponse
 
@@ -47,3 +47,7 @@ class ShareAnswersSerializer(serializers.ModelSerializer):
         fields=("owner", "answers")
 
 
+class BuddiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Buddi
+        fields=("name", "region", "role", "career", "status")

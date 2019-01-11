@@ -15,7 +15,7 @@ import logging
 import pdb
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = "C:\\Users\\kshee\\Cebula"
+BASE_DIR = "C:\\Users\\kshee\\buddibang"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -33,7 +33,7 @@ AUTH_USER_MODEL='cebula.MyUser'
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    # 'channels',
     'cebula',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,11 +46,11 @@ INSTALLED_APPS = [
     'haystack',
     'haystack_Wang',
     'elasticsearch',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
     'webpack_loader',
     'rest_framework',
     'api',
@@ -73,7 +73,7 @@ ROOT_URLCONF = 'businessproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'frontend/templates')],
+        'DIRS': [os.path.join(BASE_DIR,'front/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,12 +156,32 @@ USE_L10N = True
 USE_TZ = True
 
 
+WEBPACK_LOADER = {
+    'DEFAULT' : {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'front/webpack-stats.json'),
+
+    }
+}
+
+
+
+# WEBPACK_LOADER = {
+#     'DEFAULT' : {
+#             'BUNDLE_DIR_NAME': os.path.join(BASE_DIR, 'front/static/bundles/'),
+#             'STATS_FILE': os.path.join(BASE_DIR, 'front/webpack-stats.json'),
+
+#     }
+# }
+
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/' #이건 의미가 없는건가? '/aastatic/'으로 바꿔도 request url이 Request URL: http://127.0.0.1:8000/aastatic/bundles/MainPage.js로 바뀌어도 잘 나오네??
 STATICFILES_DIRS=[
-    os.path.join(BASE_DIR,'frontend/static'),
+    os.path.join(BASE_DIR,'front/static'), #<-- 이게 중요하네, 이걸 바꾸니 됨, 근데 이렇게 햇엇던거같은데? 
 ]
 
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
@@ -171,7 +191,7 @@ LOGIN_REDIRECT_URL='/cebula/'
 
 #Media_URL
 MEDIA_URL='/files/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'backend/uploads')
+MEDIA_ROOT=os.path.join(BASE_DIR,'back/uploads')
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1000000
 
@@ -253,13 +273,7 @@ LOGGING = {
     }
 }
 
-WEBPACK_LOADER = {
-    'DEFAULT' : {
-            'BUNDLE_DIR_NAME': 'cebula/bundles/',
-            'STATS_FILE': os.path.join(BASE_DIR, 'frontend/cebula_react/webpack-stats.json'),
 
-    }
-}
 
 # REST_FRAMEWORK = {
 #     # Use Django's standard `django.contrib.auth` permissions,

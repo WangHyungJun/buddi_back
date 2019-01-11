@@ -112,3 +112,13 @@ class Alarm(models.Model):
     owner=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     contents=models.CharField(max_length=100)
 
+
+class Buddi(models.Model):
+    region=models.IntegerField(default=1)
+    role = models.IntegerField(default=1)
+    career = models.IntegerField(default=1)
+    status=models.IntegerField(default=1)
+    name=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return self.name.username

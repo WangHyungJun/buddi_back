@@ -21,9 +21,8 @@ urlpatterns = [
     # path('<slug:username>/<slug:category>/(?P<pk>\d+)/$', views.Sub_Category.as_view(), name="sub_category"),
     re_path(r'(?P<username>.*)/(?P<category>.*)/(?P<sub_category>.*)', views.Sub_Category.as_view(), name="sub_category"),
     # path('search/', views.MySearchView.as_view(), name='search_view'),
-    path('friendsearch', views.FriendSearch.as_view(), name="friendsearch"),
+    # path('friendsearch', views.FriendSearch.as_view(), name="friendsearch"),
     path('test', views.Test.as_view(), name="test"),
     path('<slug:username>/setting', views.Setting.as_view(), name='setting'),
     path('websoket' ,views.websoket.as_view(), name="websoket"),
-    re_path(r'test/(?P<username>.*)', views.UserTestView.as_view(), name='usertest'),
 ]

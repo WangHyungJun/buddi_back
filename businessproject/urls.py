@@ -29,7 +29,7 @@ urlpatterns = [
     path('accounts/logout', cebula_views.LogOut, name='logout'),
     url(r'^accounts/signup/$',cebula_views.CreateUserView.as_view(),name='signup'),
     url(r'^accounts/signup/done$',cebula_views.RegisteredView.as_view(),name='create_user_done'),
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

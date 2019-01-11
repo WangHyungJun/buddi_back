@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.admin import User
 from django.contrib.sites.models import Site
 
-from .models import Photo,Question, Answers, Profile, MyUser, Category
+from .models import Photo,Question, Answers, Profile, MyUser, Category, Buddi
 
 
 class ProfileInline(admin.StackedInline):
@@ -19,3 +19,4 @@ admin.site.register(Question)
 admin.site.register(Answers)
 admin.site.register(MyUser)
 admin.site.register(Category)
+admin.site.register(Buddi)

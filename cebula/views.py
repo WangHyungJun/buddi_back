@@ -1,8 +1,6 @@
 import json
 import logging
 import pdb
-import channels.layers
-from asgiref.sync import async_to_sync
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import hashers, login, logout
@@ -10,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils.decorators import method_decorator
@@ -19,16 +17,15 @@ from django.template import RequestContext
 from . import models
 from .forms import CreateUserForm, UploadForm, QuestionForm, CategoryForm, ContentForm, FriendSearchForm
 from .models import Category, MyUser, Question, Answers
-from haystack.generic_views import SearchView
-from haystack.query import SearchQuerySet, EmptySearchQuerySet
+# from haystack.generic_views import SearchView
+# from haystack.query import SearchQuerySet, EmptySearchQuerySet
 from .mixins import Question_AjaxableResponseMixin, JSONResponseMixin
 from rest_framework.generics import ListAPIView, CreateAPIView
-from .serializers import QuestionSerializer, MyUserSerializer, AnswersSerializer, ShareQnASerializer, ShareAnswersSerializer
+from .serializers import QuestionSerializer, MyUserSerializer, AnswersSerializer, ShareQnASerializer, ShareAnswersSerializer, BuddiSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +66,7 @@ def counting_metoo(question_pk):
 
 @method_decorator(login_required(login_url='login'), name="dispatch")
 class IndexView(Question_AjaxableResponseMixin):
-    template_name = "cebula/alpha_ver2.html"
+    template_name = "cebula/alpha_main_multi.html"
     form_class = QuestionForm
 
     def get_context_data(self, **kwargs):
@@ -408,7 +405,7 @@ def UserPage(request,username):
                    'latest_question_and_answer_list': latest_question_and_answer_list, 'galaxy_num_list': galaxy_num_list,
                    'galaxy_num': galaxy_num, 'onoff': onoff, 'following': following, 'follower': follower, 'is_following': is_following}
 
-        return render(request, "cebula/alpha_userpage_answer.html", context)
+        return render(request, "cebula/alpha_userpage.html", context)
 
 
     if request.POST['divider']=="click_follower":
@@ -791,72 +788,88 @@ class Sub_Category(ListView):
 #     return render(request, 'search/search.html', context)
 
 
-class FriendSearch(SearchView, JSONResponseMixin):
-    # template_name = "search/friend_search.html"
-    # form_class = DateRangeSearchForm... search form이 필요할까? request.get에서 얻은 Data로 필터링할 것이니 필요 없을 듯.
-    # sqs=SearchQuerySet().models(MyUser).all() #MyUser model로 filtering하겠다.
-    query=""
-    results = EmptySearchQuerySet()
-    load_all = True
-    # form_class = FriendSearchForm
-    context_object_name = 'context'
-    form_name = "form"
+# class FriendSearch(SearchView, JSONResponseMixin):
+#     # template_name = "search/friend_search.html"
+#     # form_class = DateRangeSearchForm... search form이 필요할까? request.get에서 얻은 Data로 필터링할 것이니 필요 없을 듯.
+#     # sqs=SearchQuerySet().models(MyUser).all() #MyUser model로 filtering하겠다.
+#     query=""
+#     results = EmptySearchQuerySet()
+#     load_all = True
+#     # form_class = FriendSearchForm
+#     context_object_name = 'context'
+#     form_name = "form"
 
-    def get_queryset(self):
-        # queryset = super().get_queryset()
+#     def get_queryset(self):
+#         # queryset = super().get_queryset()
 
-        if self.request.GET.get('q'):
-            keyword=self.request.GET['q']
-            sqs=SearchQuerySet().models(MyUser, models.Question).filter(username__contains=keyword)
-            return sqs
-        else:
-            pass
-        return ''
+#         if self.request.GET.get('q'):
+#             keyword=self.request.GET['q']
+#             sqs=SearchQuerySet().models(MyUser, models.Question).filter(username__contains=keyword)
+#             return sqs
+#         else:
+#             pass
+#         return ''
 
-    #context data를 FRONT에 보낸다.
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
+#     #context data를 FRONT에 보낸다.
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
 
-        if self.request.GET.get('q') is None:
-            context['users']=MyUser.objects.get(id=self.request.user.pk)
-            return context
+#         if self.request.GET.get('q') is None:
+#             context['users']=MyUser.objects.get(id=self.request.user.pk)
+#             return context
 
-        #검색어는 입력했으나 그 형식이 유효하지 않은 경우
-        elif not FriendSearchForm(self.request.GET.get('q')).is_valid:
-            context={'message': "You search has some errors"}
-            return context
-        #검색어 형식이 유효한 경우
-        else:
-            query = self.request.GET.get('q')
-            sqs = SearchQuerySet().models(MyUser).filter(text__contains=query)
-            context['query'] = query
-            context['results'] = sqs
-            pdb.set_trace()
-            return context
+#         #검색어는 입력했으나 그 형식이 유효하지 않은 경우
+#         elif not FriendSearchForm(self.request.GET.get('q')).is_valid:
+#             context={'message': "You search has some errors"}
+#             return context
+#         #검색어 형식이 유효한 경우
+#         else:
+#             query = self.request.GET.get('q')
+#             sqs = SearchQuerySet().models(MyUser).filter(text__contains=query)
+#             context['query'] = query
+#             context['results'] = sqs
+#             pdb.set_trace()
+#             return context
 
-    def render_to_response(self, context, **response_kwargs):
+#     def render_to_response(self, context, **response_kwargs):
 
-        if self.request.is_ajax():
-            sqs = SearchQuerySet().autocomplete(content_auto=self.request.GET.get('q', ''))[:5]
-            suggestions = [result.username for result in sqs]
+#         if self.request.is_ajax():
+#             sqs = SearchQuerySet().autocomplete(content_auto=self.request.GET.get('q', ''))[:5]
+#             suggestions = [result.username for result in sqs]
 
-            # Make sure you return a JSON object, not a bare list.
-            # Otherwise, you could be vulnerable to an XSS attack.
+#             # Make sure you return a JSON object, not a bare list.
+#             # Otherwise, you could be vulnerable to an XSS attack.
 
-            context={'results': suggestions}
+#             context={'results': suggestions}
 
-            return JsonResponse(context, safe=False)
+#             return JsonResponse(context, safe=False)
 
-        return render(self.request, 'search/friend_search.html')
+#         return render(self.request, 'search/friend_search.html')
+
+
+# class Test(TemplateView):
+#     template_name="cebula/test.html"
+#
+#     def post(self, *args, **kwargs):
+#         pdb.set_trace()
+
 
 class Test(TemplateView):
-    template_name="cebula/test.html"
+    template_name = "cebula/test.html"
 
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
         context=super(TemplateView, self).get_context_data()
-        context['username']=self.request.user.username
 
         return context
+
+    def post(self, *args, **kwargs):
+        #새로운 정보 받기
+        region=self.request.POST['region']
+        role = self.request.POST['role']
+        career = self.request.POST['career']
+        status = self.request.POST['status']
+
+        return render(self.request, 'cebula/test.html', {'region': region, 'role': role, 'career': career, 'status': status})
 
 
 class Setting(UpdateView):
@@ -935,27 +948,28 @@ class UserPageAPIView(APIView):
     #userpage/answer 부분
     def get(self, request, username):
         user=get_object_or_404(MyUser, username=username)
-        all_categories_list=[]
-        category_object=models.Category.objects.filter(category_owner=user.pk).exclude(parentId__isnull=False)
+        
+        category_objects=models.Category.objects.filter(category_owner=user.pk)
+       
+         
+        categoryList=[]
 
-        for i in range(0,(len(category_object)//6+1)):
-            temp_objects=category_object[6*i:6*(i+1)]
+        for object in category_objects:   
             temp_dic={}
-            j=0
-
-            for object in temp_objects:   
-                if object.category_name=="":
-                    temp_dic[j]=""
-                else:
-                    temp_list=[]
-                    for sub_object in models.Category.objects.filter(parentId=object.pk):
-                        temp_list.append(sub_object.category_name)
-                    temp_dic[object.category_name]=temp_list
-                j+=1
-                    
-            all_categories_list.append(temp_dic)
+            if object.category_name=="":
+                temp_dic["null"]=""
+                categoryList.append(temp_dic) 
+            else:
+                temp_list=[]
+                for sub_object in models.Category.objects.filter(parentId=object.pk):
+                    temp_list.append(sub_object.category_name)
                 
-        return Response(all_categories_list)
+                temp_dic[object.category_name]=temp_list
+                categoryList.append(temp_dic) 
+                    
+        
+                
+        return Response(categoryList)
 
 class MainPageAPIView(APIView, MyUserSerializer):
     renderer_classes = (JSONRenderer,)
@@ -1018,6 +1032,31 @@ class ShareAnswersAPIView(ListAPIView):
         return queryset
 
 
+class BuddiAPIView(ListAPIView):
+    serializer_class = BuddiSerializer
+
+    def get_queryset(self):
+        queryset=models.Buddi.objects.all()
+        region = {'seoul': 1, 'busan': 2, 'other': 3}
+        role = {'planner': 1, "designer": 2, "developer": 3}
+        career = {"newbie": 1, "less_one": 2, "less_three": 3}
+        status = {'finding': 1, 'mating': 2, 'current': 3}
+
+        if not self.request.GET.get('region') in ['all', '']:
+            queryset=queryset.filter(region=region[self.request.GET.get('region')])
+
+        if not self.request.GET.get('role') in ['all', '']:
+            queryset =queryset.filter(role=role[self.request.GET.get('role')])
+
+        if not self.request.GET.get('career') in ['all','']:
+            queryset=queryset.filter(career=career[self.request.GET.get('career')])
+
+        if not self.request.GET.get('status') in ['all', '']:
+            queryset=queryset.filter(status=status[self.request.GET.get('region')])
+
+        return queryset
+
+
 class websoket(TemplateView):
     template_name = "cebula/alphat_websoket.html"
 
@@ -1040,5 +1079,9 @@ class UserTestView(TemplateView):
         ins.save()
 
         return HttpResponse('')
+
+
+
+
 
 
